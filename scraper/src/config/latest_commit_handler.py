@@ -40,25 +40,7 @@ class UpdateLatestCommit:
     def get_head_commit(self):
         url = self.GITHUT_API_BASE_URL + self.docs_owner + '/' + self.docs_repo + '/commits/' + self.docs_ref
         resp = requests.get(url, headers=self.headers)
-        print(f"DEBUG: GitHub API URL: {url}")
-        print(f"DEBUG: Response status: {resp.status_code}")
-        
-        if resp.status_code == 401:
-            print("WARNING: GitHub authentication failed. Using fallback commit hash.")
-            return "fallback-commit-hash"
-        
-        if resp.status_code != 200:
-            print(f"WARNING: GitHub API returned status {resp.status_code}. Using fallback commit hash.")
-            return "fallback-commit-hash"
-            
-        print(f"DEBUG: Response text: {resp.text}")
         json_text = json.loads(resp.text)
-        print(f"DEBUG: JSON keys: {list(json_text.keys()) if isinstance(json_text, dict) else 'Not a dict'}")
-        
-        if 'sha' not in json_text:
-            print("WARNING: No 'sha' field in GitHub API response. Using fallback commit hash.")
-            return "fallback-commit-hash"
-            
         head_commit = json_text['sha']
 
         return head_commit
